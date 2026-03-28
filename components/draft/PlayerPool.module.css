@@ -1,0 +1,156 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.searchBar {
+  padding: 0.75rem;
+  border-bottom: 1px solid #334155;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #475569;
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: #6366f1;
+}
+
+.searchInput::placeholder {
+  color: #475569;
+}
+
+.tabs {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #334155;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  flex-shrink: 0;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tab:hover { border-color: #6366f1; color: #f8fafc; }
+.tabActive { background: #6366f1; border-color: #6366f1; color: #fff; }
+
+.roleChips {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #334155;
+}
+
+.chip {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid #334155;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.chip:hover { border-color: #6366f1; color: #f8fafc; }
+.chipActive { background: #334155; color: #f8fafc; border-color: #475569; }
+
+.list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.teamHeader {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+  background: #0f172a;
+  position: sticky;
+  top: 0;
+}
+
+.playerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #1e293b;
+  transition: background 0.1s;
+}
+
+.playerRow:hover { background: #263347; }
+
+.playerInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.playerName {
+  color: #f8fafc;
+  font-size: 0.9rem;
+}
+
+.roleTag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
+.role_BAT  { background: #1d4ed8; color: #bfdbfe; }
+.role_BOWL { background: #15803d; color: #bbf7d0; }
+.role_AR   { background: #7e22ce; color: #e9d5ff; }
+.role_WK   { background: #b45309; color: #fde68a; }
+
+.pickBtn {
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  border: none;
+  background: #6366f1;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.pickBtn:hover:not(:disabled) { background: #4f46e5; }
+.pickBtn:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+
+.empty {
+  padding: 2rem;
+  text-align: center;
+  color: #475569;
+  font-size: 0.9rem;
+}

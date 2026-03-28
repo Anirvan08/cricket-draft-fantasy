@@ -1,0 +1,103 @@
+.page {
+  min-height: 100vh;
+  background: #0f172a;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.leagueName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.advanceBtn {
+  background: #334155;
+  border: none;
+  color: #f87171;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.advanceBtn:hover { background: #475569; }
+
+.errorBanner {
+  background: #450a0a;
+  border: 1px solid #7f1d1d;
+  color: #f87171;
+  border-radius: 8px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Mobile toggle — shown only on small screens */
+.mobileToggle {
+  display: none;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.toggleBtn {
+  flex: 1;
+  padding: 0.55rem;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.toggleActive {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #6366f1;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  flex: 1;
+  min-height: 0;
+  height: calc(100vh - 200px);
+}
+
+.poolCol, .squadsCol {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Mobile: toggle visibility */
+@media (max-width: 680px) {
+  .mobileToggle { display: flex; }
+
+  .body { grid-template-columns: 1fr; }
+
+  .hidden { display: none; }
+  .visible { display: flex; flex-direction: column; height: calc(100vh - 240px); }
+}
+
+/* Desktop: both always visible */
+@media (min-width: 681px) {
+  .poolCol, .squadsCol {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+}

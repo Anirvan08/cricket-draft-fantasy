@@ -1,0 +1,103 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  overflow-x: auto;
+  border-bottom: 1px solid #334155;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.6rem 0.9rem;
+  border: none;
+  border-right: 1px solid #334155;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  gap: 0.1rem;
+}
+
+.tab:hover { background: #263347; }
+.tabActive { background: #263347; color: #f8fafc; }
+
+.count {
+  font-size: 0.65rem;
+  color: #64748b;
+}
+
+.tabActive .count { color: #818cf8; }
+
+.squad {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.pickRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid #1a2438;
+}
+
+.emptyRow { opacity: 0.35; }
+
+.pickNum {
+  width: 1.4rem;
+  font-size: 0.7rem;
+  color: #475569;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.pickName {
+  flex: 1;
+  color: #f8fafc;
+  font-size: 0.875rem;
+}
+
+.emptyLabel {
+  flex: 1;
+  color: #475569;
+  font-size: 0.875rem;
+}
+
+.pickMeta {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.roleTag {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+}
+
+.role_BAT  { background: #1d4ed8; color: #bfdbfe; }
+.role_BOWL { background: #15803d; color: #bbf7d0; }
+.role_AR   { background: #7e22ce; color: #e9d5ff; }
+.role_WK   { background: #b45309; color: #fde68a; }
+
+.teamTag {
+  font-size: 0.65rem;
+  color: #64748b;
+  font-weight: 600;
+}
