@@ -32,6 +32,15 @@
   letter-spacing: 0.05em;
 }
 
+.adminLink {
+  font-size: 0.85rem;
+  color: #818cf8;
+  text-decoration: none;
+  padding-top: 0.25rem;
+}
+
+.adminLink:hover { text-decoration: underline; }
+
 .inviteBox {
   background: #1e293b;
   border: 1px solid #334155;

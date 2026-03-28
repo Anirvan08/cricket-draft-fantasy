@@ -106,6 +106,9 @@ export default function LeagueLobby({ league: initialLeague, members: initialMem
             {statusLabel.text}
           </span>
         </div>
+        {isAdmin && (
+          <a href={`/admin/${league.id}`} className={styles.adminLink}>Admin panel →</a>
+        )}
 
         <div className={styles.inviteBox}>
           <span className={styles.inviteLabel}>Invite code</span>
