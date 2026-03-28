@@ -16,7 +16,8 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
   }
 
-  const { data, error } = await setDraftStatus(supabase, params.id, status, user.id)
+  const { id } = await params
+  const { data, error } = await setDraftStatus(supabase, id, status, user.id)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
   return NextResponse.json({ data })

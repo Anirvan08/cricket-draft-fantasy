@@ -8,7 +8,7 @@ export async function POST(request, { params }) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const leagueId = params.leagueId
+  const { leagueId } = await params
 
   const [leagueRes, membersRes] = await Promise.all([
     supabase.from('leagues').select('*').eq('id', leagueId).single(),

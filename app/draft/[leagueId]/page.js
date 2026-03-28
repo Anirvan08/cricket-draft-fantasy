@@ -9,7 +9,7 @@ export default async function DraftPage({ params }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const leagueId = params.leagueId
+  const { leagueId } = await params
 
   const [leagueRes, membersRes, picksRes, playersRes] = await Promise.all([
     supabase.from('leagues').select('*').eq('id', leagueId).single(),

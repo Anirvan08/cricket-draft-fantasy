@@ -140,7 +140,7 @@ export default function LeagueLobby({ league: initialLeague, members: initialMem
               </span>
               <div className={styles.memberInfo}>
                 <span className={styles.memberName}>
-                  {member.user.display_name}
+                  {member.user?.display_name ?? 'Unknown'}
                   {member.user_id === currentUserId && <span className={styles.youTag}>you</span>}
                 </span>
                 {member.is_admin && <span className={styles.adminTag}>admin</span>}

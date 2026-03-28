@@ -12,7 +12,7 @@ export async function POST(request, { params }) {
   const { playerId } = await request.json()
   if (!playerId) return NextResponse.json({ error: 'playerId is required' }, { status: 400 })
 
-  const leagueId = params.leagueId
+  const { leagueId } = await params
 
   // Fetch current league state, members, and picks in parallel
   const [leagueRes, membersRes, picksRes] = await Promise.all([

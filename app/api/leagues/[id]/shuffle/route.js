@@ -8,7 +8,8 @@ export async function POST(request, { params }) {
 
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { error } = await shuffleDraftOrder(supabase, params.id, user.id)
+  const { id } = await params
+  const { error } = await shuffleDraftOrder(supabase, id, user.id)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
   return NextResponse.json({ success: true })

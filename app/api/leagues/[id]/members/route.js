@@ -8,7 +8,8 @@ export async function GET(request, { params }) {
 
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { data, error } = await getMembersByLeague(supabase, params.id)
+  const { id } = await params
+  const { data, error } = await getMembersByLeague(supabase, id)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
   return NextResponse.json({ data })
