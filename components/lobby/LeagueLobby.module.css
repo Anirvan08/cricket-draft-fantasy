@@ -1,0 +1,256 @@
+.container {
+  min-height: 100vh;
+  background: #0f172a;
+  padding: 2rem 1rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.leagueName {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 0.4rem;
+}
+
+.statusBadge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.inviteBox {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 180px;
+}
+
+.inviteLabel {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.inviteRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.inviteCode {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #818cf8;
+  letter-spacing: 0.15em;
+  font-family: monospace;
+}
+
+.copyBtn {
+  background: #334155;
+  border: none;
+  color: #cbd5e1;
+  border-radius: 6px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.copyBtn:hover {
+  background: #475569;
+}
+
+.membersSection {
+  margin-bottom: 2rem;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.sectionHeader h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.count {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #64748b;
+  margin-left: 0.4rem;
+}
+
+.shuffleBtn {
+  background: #334155;
+  border: none;
+  color: #cbd5e1;
+  border-radius: 8px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.shuffleBtn:hover:not(:disabled) {
+  background: #475569;
+}
+
+.shuffleBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.memberGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.memberCard {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.emptySlot {
+  opacity: 0.4;
+  border-style: dashed;
+}
+
+.orderBadge {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #0f172a;
+  border: 1px solid #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.memberInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.memberName {
+  color: #f8fafc;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.youTag {
+  font-size: 0.7rem;
+  background: #1d4ed8;
+  color: #bfdbfe;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  font-weight: 600;
+}
+
+.adminTag {
+  font-size: 0.7rem;
+  background: #4c1d95;
+  color: #ddd6fe;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  font-weight: 600;
+}
+
+.emptyLabel {
+  color: #475569;
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+.adminPanel {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.adminPanel h3 {
+  color: #f8fafc;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.hint {
+  color: #f59e0b;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.startBtn {
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 8px;
+  border: none;
+  background: #16a34a;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.startBtn:hover:not(:disabled) {
+  background: #15803d;
+}
+
+.startBtnDisabled {
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 8px;
+  border: none;
+  background: #1e293b;
+  color: #475569;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: not-allowed;
+  border: 1px solid #334155;
+}
+
+.disabledHint {
+  color: #64748b;
+  font-size: 0.8rem;
+  margin-top: 0.75rem;
+  text-align: center;
+}
