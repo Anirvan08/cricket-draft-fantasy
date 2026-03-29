@@ -1,0 +1,12 @@
+name = "ipl-fantasy-points"
+main = "index.js"
+compatibility_date = "2024-11-01"
+
+[triggers]
+# 1:00 AM UTC = 6:30 AM IST — after most IPL evening matches finish
+crons = ["0 1 * * *"]
+
+# Set secrets via: wrangler secret put SUPABASE_URL etc.
+# Do NOT put actual secret values here.
+[vars]
+# Non-secret vars can go here if needed

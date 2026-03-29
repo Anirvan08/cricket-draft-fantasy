@@ -24,10 +24,15 @@ export default function MySquad({ league, member, picks }) {
           <h1 className={styles.title}>My Squad</h1>
           <p className={styles.leagueName}>{league.name}</p>
         </div>
+        <div className={styles.headerRight}>
+          {(league.season_status === 'in_season' || league.draft_status === 'completed') && (
+            <Link href={`/leaderboard/${league.id}`} className={styles.leaderboardLink}>Leaderboard →</Link>
+          )}
         <div className={styles.countBadge}>
           <span className={styles.countNum}>{filled}</span>
           <span className={styles.countDen}>/{totalSlots}</span>
           <span className={styles.countLabel}>players</span>
+        </div>
         </div>
       </div>
 

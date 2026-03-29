@@ -110,6 +110,9 @@ export default function LeagueLobby({ league: initialLeague, members: initialMem
           {league.draft_status !== 'locked' && (
             <a href={`/squad/${league.id}`} className={styles.adminLink}>My squad →</a>
           )}
+          {league.season_status === 'in_season' || league.draft_status === 'completed' ? (
+            <a href={`/leaderboard/${league.id}`} className={styles.adminLink}>Leaderboard →</a>
+          ) : null}
           {isAdmin && (
             <a href={`/admin/${league.id}`} className={styles.adminLink}>Admin panel →</a>
           )}

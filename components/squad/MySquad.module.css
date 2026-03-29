@@ -14,6 +14,21 @@
 
 .backLink:hover { text-decoration: underline; }
 
+.leaderboardLink {
+  font-size: 0.85rem;
+  color: #818cf8;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.leaderboardLink:hover { text-decoration: underline; }
+
+.headerRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 .header {
   display: flex;
   justify-content: space-between;

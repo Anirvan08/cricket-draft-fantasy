@@ -1,0 +1,342 @@
+.container {
+  min-height: 100vh;
+  background: #0f172a;
+  padding: 2rem 1rem;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.backLink {
+  font-size: 0.85rem;
+  color: #818cf8;
+  text-decoration: none;
+}
+.backLink:hover { text-decoration: underline; }
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0.25rem 0 0.2rem;
+}
+
+.leagueName {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.squadLink {
+  font-size: 0.85rem;
+  color: #818cf8;
+  text-decoration: none;
+  padding-top: 2rem;
+}
+.squadLink:hover { text-decoration: underline; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 0;
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.tab:hover { color: #f8fafc; }
+.tabActive { color: #818cf8; border-bottom-color: #818cf8; }
+
+.tabCount {
+  background: #1e293b;
+  border-radius: 999px;
+  padding: 0.05rem 0.4rem;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* Standings */
+.standings {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.memberRow {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.youRow {
+  border-color: #4f46e5;
+}
+
+.memberMain {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+}
+.memberMain:hover { background: #263347; }
+
+.rank {
+  width: 2rem;
+  text-align: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.rankNum {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.memberName {
+  flex: 1;
+  color: #f8fafc;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.youTag {
+  font-size: 0.65rem;
+  background: #1d4ed8;
+  color: #bfdbfe;
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+  font-weight: 600;
+}
+
+.totalPts {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #818cf8;
+  flex-shrink: 0;
+}
+
+.chevron {
+  color: #475569;
+  font-size: 0.85rem;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.chevronOpen { transform: rotate(180deg); }
+
+/* Player breakdown inside standings */
+.playerBreakdown {
+  border-top: 1px solid #334155;
+  padding: 0.5rem 0;
+}
+
+.breakdownRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem 0.4rem 3.75rem;
+}
+
+.breakdownName {
+  flex: 1;
+  font-size: 0.875rem;
+  color: #cbd5e1;
+}
+
+.breakdownTeam {
+  font-size: 0.75rem;
+  color: #64748b;
+  min-width: 2.5rem;
+}
+
+.breakdownPts {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #94a3b8;
+  min-width: 3.5rem;
+  text-align: right;
+}
+
+.noData {
+  padding: 0.75rem 1rem 0.75rem 3.75rem;
+  font-size: 0.85rem;
+  color: #475569;
+  font-style: italic;
+}
+
+/* Role tags */
+.roleTag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.role_BAT  { background: #1d4ed8; color: #bfdbfe; }
+.role_BOWL { background: #15803d; color: #bbf7d0; }
+.role_AR   { background: #7e22ce; color: #e9d5ff; }
+.role_WK   { background: #b45309; color: #fde68a; }
+
+/* Match history */
+.matchList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.matchCard {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.matchHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+  gap: 1rem;
+}
+.matchHeader:hover { background: #263347; }
+
+.matchTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.matchTeams {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.matchDate {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.matchRight {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.processedBadge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #4ade80;
+  background: #14532d;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+}
+
+.pendingBadge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #f59e0b;
+  background: #451a03;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+}
+
+/* Match breakdown */
+.matchBreakdown {
+  border-top: 1px solid #334155;
+  padding: 0.5rem 0;
+}
+
+.matchMemberList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.matchMemberRow {
+  padding: 0.5rem 1rem;
+}
+
+.matchMemberName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.matchMemberPts {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #818cf8;
+  margin-left: 0.75rem;
+}
+
+.matchPlayerList {
+  margin-top: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.matchPlayerRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: 0.75rem;
+}
+
+.pendingNote {
+  font-size: 0.8rem;
+  color: #475569;
+  font-style: italic;
+  padding: 0.5rem 1rem;
+}
+
+.emptyHint {
+  text-align: center;
+  color: #475569;
+  font-size: 0.9rem;
+  padding: 3rem 0;
+}
