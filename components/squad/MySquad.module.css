@@ -1,0 +1,156 @@
+.container {
+  min-height: 100vh;
+  background: #0f172a;
+  padding: 2rem 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.backLink {
+  font-size: 0.85rem;
+  color: #818cf8;
+  text-decoration: none;
+}
+
+.backLink:hover { text-decoration: underline; }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0.25rem 0 0.2rem;
+}
+
+.leagueName {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.countBadge {
+  display: flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  flex-shrink: 0;
+}
+
+.countNum {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #818cf8;
+}
+
+.countDen {
+  font-size: 1rem;
+  color: #475569;
+  font-weight: 600;
+}
+
+.countLabel {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-left: 0.3rem;
+}
+
+.draftingBanner {
+  background: #1e293b;
+  border: 1px solid #f59e0b;
+  color: #f59e0b;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.section {
+  margin-bottom: 1.25rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.roleTag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.role_BAT  { background: #1d4ed8; color: #bfdbfe; }
+.role_BOWL { background: #15803d; color: #bbf7d0; }
+.role_AR   { background: #7e22ce; color: #e9d5ff; }
+.role_WK   { background: #b45309; color: #fde68a; }
+
+.roleCount {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.playerList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.playerCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+}
+
+.playerInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.playerName {
+  color: #f8fafc;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.teamTag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748b;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+}
+
+.pickNum {
+  font-size: 0.75rem;
+  color: #475569;
+  font-family: monospace;
+}
+
+.empty {
+  color: #475569;
+  text-align: center;
+  padding: 3rem 0;
+  font-size: 0.9rem;
+}

@@ -32,6 +32,13 @@
   letter-spacing: 0.05em;
 }
 
+.headerLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
 .adminLink {
   font-size: 0.85rem;
   color: #818cf8;

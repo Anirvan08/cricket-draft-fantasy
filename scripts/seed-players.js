@@ -1,105 +1,83 @@
 /**
- * Seed IPL player pool from CricketData.org API.
+ * Seed IPL player pool into Supabase.
  *
  * Usage:
- *   node scripts/seed-players.js
+ *   node scripts/seed-players.js           — seed from local 2026 JSON (default)
+ *   node scripts/seed-players.js --api     — seed from CricketData.org API (when 2026 is available)
  *
- * Uses IPL 2025 squads (latest available). Re-run each season with the new series ID.
- * Safe to re-run — skips players already in the DB (upsert on api_player_id).
+ * Safe to re-run — upserts on name+ipl_team, so existing rows are updated not duplicated.
  */
 
 require('dotenv').config({ path: '.env.local' })
 const { createClient } = require('@supabase/supabase-js')
+const path = require('path')
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
-const CRICKET_API_KEY = process.env.CRICKET_DATA_API_KEY
+const SUPABASE_URL      = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SERVICE_ROLE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY
+const CRICKET_API_KEY   = process.env.CRICKET_DATA_API_KEY
 
-// IPL 2025 series ID from CricketData.org
-// Update this each season: https://api.cricapi.com/v1/series?apikey=KEY&search=IPL
-const IPL_SERIES_ID = 'd5a498c8-7596-4b93-8ab0-e0efc3345312'
+// Update this when IPL 2026 series appears in the API
+const IPL_SERIES_ID = 'd5a498c8-7596-4b93-8ab0-e0efc3345312' // IPL 2025
 
 const ROLE_MAP = {
-  'Batsman': 'BAT',
+  'Batsman':            'BAT',
   'Batting Allrounder': 'AR',
   'Bowling Allrounder': 'AR',
-  'Bowler': 'BOWL',
-  'WK-Batsman': 'WK',
+  'Bowler':             'BOWL',
+  'WK-Batsman':         'WK',
 }
 
-async function fetchSquads() {
+async function fetchFromApi() {
+  console.log('Fetching squads from CricketData.org...')
   const url = `https://api.cricapi.com/v1/series_squad?apikey=${CRICKET_API_KEY}&id=${IPL_SERIES_ID}`
   const res = await fetch(url)
   const json = await res.json()
 
-  if (json.status !== 'success') {
-    throw new Error(`API error: ${JSON.stringify(json)}`)
-  }
+  if (json.status !== 'success') throw new Error(`API error: ${JSON.stringify(json)}`)
 
-  return json.data // array of { teamName, shortname, players[] }
+  const players = []
+  for (const team of json.data) {
+    for (const player of team.players) {
+      const role = ROLE_MAP[player.role]
+      if (!role) { console.warn(`  Unknown role "${player.role}" for ${player.name} — skipping`); continue }
+      players.push({ name: player.name, ipl_team: team.shortname, role, api_player_id: player.id })
+    }
+  }
+  return players
+}
+
+function fetchFromLocal() {
+  console.log('Loading players from scripts/data/players-2026.json...')
+  return require(path.join(__dirname, 'data', 'players-2026.json'))
 }
 
 async function seed() {
+  const useApi = process.argv.includes('--api')
+  const players = useApi ? await fetchFromApi() : fetchFromLocal()
+
+  console.log(`${players.length} players loaded from ${useApi ? 'API' : 'local file'}`)
+
   const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY)
 
-  console.log('Fetching squads from CricketData.org...')
-  const teams = await fetchSquads()
-  console.log(`Got ${teams.length} teams`)
-
-  const players = []
-
-  for (const team of teams) {
-    for (const player of team.players) {
-      const role = ROLE_MAP[player.role]
-      if (!role) {
-        console.warn(`  Unknown role "${player.role}" for ${player.name} — skipping`)
-        continue
-      }
-
-      players.push({
-        name: player.name,
-        ipl_team: team.shortname,
-        role,
-        api_player_id: player.id,
-      })
-    }
-  }
-
-  console.log(`Upserting ${players.length} players...`)
-
-  // Upsert in batches of 50 to stay well under API limits
   const BATCH = 50
-  let inserted = 0
+  let done = 0
 
   for (let i = 0; i < players.length; i += BATCH) {
     const batch = players.slice(i, i + BATCH)
     const { error } = await supabase
       .from('players')
-      .upsert(batch, { onConflict: 'api_player_id' })
+      .upsert(batch, { onConflict: 'name,ipl_team', ignoreDuplicates: false })
 
-    if (error) {
-      console.error(`Error on batch ${i / BATCH + 1}:`, error.message)
-      process.exit(1)
-    }
-
-    inserted += batch.length
-    console.log(`  ${inserted}/${players.length} done`)
+    if (error) { console.error('Batch error:', error.message); process.exit(1) }
+    done += batch.length
+    console.log(`  ${done}/${players.length}`)
   }
 
   console.log(`\nDone. ${players.length} players seeded.`)
 
-  // Print summary by team
-  const byTeam = {}
-  for (const p of players) {
-    byTeam[p.ipl_team] = (byTeam[p.ipl_team] || 0) + 1
-  }
+  const byTeam = players.reduce((acc, p) => { acc[p.ipl_team] = (acc[p.ipl_team] || 0) + 1; return acc }, {})
   console.log('\nPlayers per team:')
-  Object.entries(byTeam).sort().forEach(([team, count]) => {
-    console.log(`  ${team}: ${count}`)
-  })
+  Object.entries(byTeam).sort().forEach(([t, n]) => console.log(`  ${t}: ${n}`))
 }
 
-seed().catch(err => {
-  console.error(err)
-  process.exit(1)
-})
+seed().catch(err => { console.error(err); process.exit(1) })

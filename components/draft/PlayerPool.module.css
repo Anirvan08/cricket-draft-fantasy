@@ -87,6 +87,10 @@
 }
 
 .teamHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 0.4rem 0.75rem;
   font-size: 0.7rem;
   font-weight: 700;
@@ -94,8 +98,32 @@
   text-transform: uppercase;
   color: #64748b;
   background: #0f172a;
+  border: none;
+  cursor: pointer;
   position: sticky;
   top: 0;
+  transition: color 0.15s;
+}
+
+.teamHeader:hover { color: #94a3b8; }
+
+.teamMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.65rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 500;
+}
+
+.chevron {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+.chevronCollapsed {
+  transform: rotate(-90deg);
 }
 
 .playerRow {

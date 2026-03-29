@@ -10,6 +10,15 @@ export default function PlayerPool({ players, onPick, canPick, picking }) {
   const [search, setSearch] = useState('')
   const [activeTeam, setActiveTeam] = useState('ALL')
   const [activeRole, setActiveRole] = useState('ALL')
+  const [collapsed, setCollapsed] = useState(new Set())
+
+  function toggleTeam(team) {
+    setCollapsed(prev => {
+      const next = new Set(prev)
+      next.has(team) ? next.delete(team) : next.add(team)
+      return next
+    })
+  }
 
   const teams = useMemo(() => {
     const t = [...new Set(players.map(p => p.ipl_team))].sort()
@@ -75,30 +84,42 @@ export default function PlayerPool({ players, onPick, canPick, picking }) {
 
       {/* Player list */}
       <div className={styles.list}>
-        {Object.entries(grouped).map(([team, teamPlayers]) => (
-          <div key={team}>
-            {activeTeam === 'ALL' && (
-              <div className={styles.teamHeader}>{team}</div>
-            )}
-            {teamPlayers.map(player => (
-              <div key={player.id} className={styles.playerRow}>
-                <div className={styles.playerInfo}>
-                  <span className={styles.playerName}>{player.name}</span>
-                  <span className={`${styles.roleTag} ${styles[`role_${player.role}`]}`}>
-                    {ROLE_LABEL[player.role] ?? player.role}
-                  </span>
-                </div>
+        {Object.entries(grouped).map(([team, teamPlayers]) => {
+          const isCollapsed = activeTeam === 'ALL' && collapsed.has(team)
+          return (
+            <div key={team}>
+              {activeTeam === 'ALL' && (
                 <button
-                  className={styles.pickBtn}
-                  onClick={() => onPick(player)}
-                  disabled={!canPick || picking === player.id}
+                  className={styles.teamHeader}
+                  onClick={() => toggleTeam(team)}
                 >
-                  {picking === player.id ? '…' : 'Pick'}
+                  <span>{team}</span>
+                  <span className={styles.teamMeta}>
+                    {teamPlayers.length} left
+                    <span className={`${styles.chevron} ${isCollapsed ? styles.chevronCollapsed : ''}`}>▾</span>
+                  </span>
                 </button>
-              </div>
-            ))}
-          </div>
-        ))}
+              )}
+              {!isCollapsed && teamPlayers.map(player => (
+                <div key={player.id} className={styles.playerRow}>
+                  <div className={styles.playerInfo}>
+                    <span className={styles.playerName}>{player.name}</span>
+                    <span className={`${styles.roleTag} ${styles[`role_${player.role}`]}`}>
+                      {ROLE_LABEL[player.role] ?? player.role}
+                    </span>
+                  </div>
+                  <button
+                    className={styles.pickBtn}
+                    onClick={() => onPick(player)}
+                    disabled={!canPick || picking === player.id}
+                  >
+                    {picking === player.id ? '…' : 'Pick'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )
+        })}
 
         {filtered.length === 0 && (
           <p className={styles.empty}>No players match your filters.</p>

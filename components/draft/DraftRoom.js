@@ -39,22 +39,31 @@ export default function DraftRoom({ league: initialLeague, members, initialPicks
     }
   }, [league.id])
 
-  // Realtime subscriptions
+  // Refresh league state (pick number, status) from server
+  const refreshLeague = useCallback(async () => {
+    const res = await fetch(`/api/leagues/${league.id}`)
+    if (res.ok) {
+      const json = await res.json()
+      setLeague(json.data)
+    }
+  }, [league.id])
+
+  // Realtime subscriptions + polling fallback
   useEffect(() => {
     const supabase = createClient()
 
-    // Watch for new draft picks
+    // No filter — filtered subscriptions require REPLICA IDENTITY FULL.
+    // The callback fetches for the correct league anyway.
     const picksSub = supabase
       .channel(`draft-picks-${league.id}`)
       .on('postgres_changes', {
         event: 'INSERT',
         schema: 'public',
         table: 'draft_picks',
-        filter: `league_id=eq.${league.id}`,
-      }, () => refreshPicks())
+      }, () => { refreshPicks(); refreshLeague() })
       .subscribe()
 
-    // Watch league for pick number / status changes
+    // Watch league for pick number / status changes (works once REPLICA IDENTITY FULL is pushed)
     const leagueSub = supabase
       .channel(`draft-league-${league.id}`)
       .on('postgres_changes', {
@@ -65,11 +74,18 @@ export default function DraftRoom({ league: initialLeague, members, initialPicks
       }, payload => setLeague(payload.new))
       .subscribe()
 
+    // Polling fallback — guarantees B sees updates within 5s even if realtime lags
+    const poll = setInterval(() => {
+      refreshPicks()
+      refreshLeague()
+    }, 5000)
+
     return () => {
       supabase.removeChannel(picksSub)
       supabase.removeChannel(leagueSub)
+      clearInterval(poll)
     }
-  }, [league.id, refreshPicks])
+  }, [league.id, refreshPicks, refreshLeague])
 
   // Redirect when draft completes
   useEffect(() => {
@@ -89,7 +105,11 @@ export default function DraftRoom({ league: initialLeague, members, initialPicks
     })
     const json = await res.json()
 
-    if (!res.ok) setError(json.error)
+    if (!res.ok) {
+      setError(json.error)
+    } else {
+      await Promise.all([refreshPicks(), refreshLeague()])
+    }
     setPicking(null)
   }
 
@@ -98,6 +118,7 @@ export default function DraftRoom({ league: initialLeague, members, initialPicks
     const res = await fetch(`/api/draft/${league.id}/advance`, { method: 'POST' })
     const json = await res.json()
     if (!res.ok) setError(json.error)
+    else await refreshLeague()
   }
 
   const isDraftDone = league.current_pick_number > totalPicks
