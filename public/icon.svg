@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <circle cx="256" cy="256" r="256" fill="#0f172a"/>
+  <!-- Cricket ball -->
+  <circle cx="256" cy="256" r="160" fill="#dc2626"/>
+  <!-- Seam lines -->
+  <path d="M 160 256 Q 220 190 280 256 Q 340 322 400 256" stroke="white" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <path d="M 160 256 Q 220 322 280 256 Q 340 190 400 256" stroke="white" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <!-- Small seam stitches left -->
+  <line x1="175" y1="230" x2="188" y2="240" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  <line x1="178" y1="256" x2="191" y2="256" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  <line x1="175" y1="282" x2="188" y2="272" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  <!-- Small seam stitches right -->
+  <line x1="337" y1="230" x2="324" y2="240" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  <line x1="334" y1="256" x2="321" y2="256" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  <line x1="337" y1="282" x2="324" y2="272" stroke="white" stroke-width="5" stroke-linecap="round"/>
+</svg>
