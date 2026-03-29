@@ -11,6 +11,7 @@ export default function LeagueLobby({ league: initialLeague, members: initialMem
   const [members, setMembers] = useState(initialMembers)
   const [copied, setCopied] = useState(false)
   const [loading, setLoading] = useState(null) // 'shuffle' | 'lock' | 'unlock' | 'start'
+  const [removing, setRemoving] = useState(null) // memberId being removed
 
   const isAdmin = members.find(m => m.user_id === currentUserId)?.is_admin ?? false
 
@@ -77,6 +78,18 @@ export default function LeagueLobby({ league: initialLeague, members: initialMem
       body: JSON.stringify({ status: newStatus }),
     })
     setLoading(null)
+  }
+
+  async function handleRemoveMember(memberId) {
+    if (!confirm('Remove this participant from the league?')) return
+    setRemoving(memberId)
+    await fetch(`/api/leagues/${league.id}/members`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ memberId }),
+    })
+    await refreshMembers()
+    setRemoving(null)
   }
 
   async function copyInviteCode() {
@@ -156,6 +169,16 @@ export default function LeagueLobby({ league: initialLeague, members: initialMem
                 </span>
                 {member.is_admin && <span className={styles.adminTag}>admin</span>}
               </div>
+              {isAdmin && !member.is_admin && league.draft_status === 'locked' && (
+                <button
+                  className={styles.removeMemberBtn}
+                  onClick={() => handleRemoveMember(member.id)}
+                  disabled={removing === member.id}
+                  title="Remove from league"
+                >
+                  {removing === member.id ? '…' : '✕'}
+                </button>
+              )}
             </div>
           ))}
 

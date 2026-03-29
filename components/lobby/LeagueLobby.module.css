@@ -214,6 +214,26 @@
   font-style: italic;
 }
 
+.removeMemberBtn {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid #475569;
+  color: #64748b;
+  border-radius: 6px;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.removeMemberBtn:hover:not(:disabled) {
+  background: #7f1d1d;
+  border-color: #dc2626;
+  color: #fca5a5;
+}
+
 .adminPanel {
   background: #1e293b;
   border: 1px solid #334155;

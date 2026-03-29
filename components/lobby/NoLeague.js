@@ -10,6 +10,7 @@ export default function NoLeague({ canCreate = false }) {
 
   const [leagueName, setLeagueName] = useState('')
   const [maxParticipants, setMaxParticipants] = useState(8)
+  const [playersPerTeam, setPlayersPerTeam] = useState(11)
   const [inviteCode, setInviteCode] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -22,7 +23,7 @@ export default function NoLeague({ canCreate = false }) {
     const res = await fetch('/api/leagues', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: leagueName, maxParticipants }),
+      body: JSON.stringify({ name: leagueName, maxParticipants, playersPerTeam }),
     })
     const json = await res.json()
 
@@ -101,8 +102,16 @@ export default function NoLeague({ canCreate = false }) {
             <div className={styles.field}>
               <label>Number of participants</label>
               <select value={maxParticipants} onChange={e => setMaxParticipants(Number(e.target.value))}>
-                {[2, 3, 4, 5, 6, 7, 8].map(n => (
+                {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map(n => (
                   <option key={n} value={n}>{n} participants</option>
+                ))}
+              </select>
+            </div>
+            <div className={styles.field}>
+              <label>Players per team</label>
+              <select value={playersPerTeam} onChange={e => setPlayersPerTeam(Number(e.target.value))}>
+                {[6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map(n => (
+                  <option key={n} value={n}>{n} players</option>
                 ))}
               </select>
             </div>

@@ -17,7 +17,7 @@ const SERVICE_ROLE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY
 const CRICKET_API_KEY   = process.env.CRICKET_DATA_API_KEY
 
 // Update this when IPL 2026 series appears in the API
-const IPL_SERIES_ID = 'd5a498c8-7596-4b93-8ab0-e0efc3345312' // IPL 2025
+const IPL_SERIES_ID = '87c62aac-bc3c-4738-ab93-19da0690488f' // IPL 2026
 
 const ROLE_MAP = {
   'Batsman':            'BAT',

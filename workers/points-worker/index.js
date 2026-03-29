@@ -28,6 +28,8 @@ export default {
   },
 }
 
+const IPL_SERIES_ID = '87c62aac-bc3c-4738-ab93-19da0690488f' // IPL 2026
+
 // ─── Main orchestration ─────────────────────────────────────────────────────
 
 async function run(env) {
@@ -36,13 +38,16 @@ async function run(env) {
 
   say(`[${new Date().toISOString()}] Points worker started`)
 
+  // Step 1: Auto-discover and store new IPL matches
+  await syncIplMatches(env, say)
+
   // Yesterday in IST (UTC+5:30)
   const now = new Date()
   now.setMinutes(now.getMinutes() + 330) // shift to IST
   now.setDate(now.getDate() - 1)
   const yesterday = now.toISOString().slice(0, 10) // YYYY-MM-DD
 
-  say(`Processing matches for ${yesterday}`)
+  say(`\nProcessing points for ${yesterday}`)
 
   // Fetch unprocessed matches scheduled for yesterday
   const matches = await dbGet(env, `matches?match_date=eq.${yesterday}&points_processed=eq.false&select=*`)
@@ -65,6 +70,69 @@ async function run(env) {
 
   say('\nDone.')
   return { ok: true, log }
+}
+
+// ─── Auto-discover IPL matches from CricAPI ──────────────────────────────────
+
+async function syncIplMatches(env, say) {
+  say('Syncing IPL match schedule from CricAPI...')
+
+  // Fetch all leagues so we know which league_ids to add matches to
+  const leagues = await dbGet(env, 'leagues?select=id')
+  if (!leagues.length) { say('  No leagues found.'); return }
+
+  // Fetch currentMatches (paginated — IPL can appear on any page)
+  const iplMatches = []
+  for (let offset = 0; offset <= 50; offset += 25) {
+    const res = await fetch(
+      `https://api.cricapi.com/v1/currentMatches?apikey=${env.CRICKET_DATA_API_KEY}&offset=${offset}`
+    )
+    const json = await res.json()
+    if (json.status !== 'success' || !json.data?.length) break
+
+    const ipl = json.data.filter(m => m.series_id === IPL_SERIES_ID)
+    iplMatches.push(...ipl)
+
+    if (json.data.length < 25) break // last page
+  }
+
+  say(`  Found ${iplMatches.length} IPL matches in CricAPI`)
+
+  if (!iplMatches.length) return
+
+  // Upsert each match into every league
+  const rows = []
+  for (const league of leagues) {
+    for (const m of iplMatches) {
+      const teams = m.teams ?? []
+      rows.push({
+        league_id:    league.id,
+        team_a:       teams[0] ?? 'TBD',
+        team_b:       teams[1] ?? 'TBD',
+        match_date:   m.date,
+        api_match_id: m.id,
+      })
+    }
+  }
+
+  // Upsert on (league_id, api_match_id) — safe to run repeatedly
+  const res = await fetch(`${env.SUPABASE_URL}/rest/v1/matches`, {
+    method: 'POST',
+    headers: {
+      'apikey':        env.SUPABASE_SERVICE_ROLE_KEY,
+      'Authorization': `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+      'Content-Type':  'application/json',
+      'Prefer':        'resolution=merge-duplicates',
+    },
+    body: JSON.stringify(rows),
+  })
+
+  if (!res.ok) {
+    say(`  WARN: match upsert failed — ${await res.text()}`)
+    return
+  }
+
+  say(`  Upserted ${rows.length} match row(s)`)
 }
 
 // ─── Per-match processing ────────────────────────────────────────────────────
