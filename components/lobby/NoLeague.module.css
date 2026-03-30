@@ -5,18 +5,18 @@
   align-items: center;
   justify-content: center;
   padding: 2rem 1rem;
-  background: #0f172a;
+  background: var(--bg-base);
 }
 
 .title {
   font-size: 2rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .subtitle {
-  color: #94a3b8;
+  color: var(--text-secondary);
   margin-bottom: 2.5rem;
   font-size: 1rem;
 }
@@ -33,21 +33,22 @@
 .optionBtn {
   flex: 1;
   min-width: 220px;
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   padding: 1.75rem 1.5rem;
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
 
 .optionBtn:hover {
-  border-color: #6366f1;
-  background: #1e293b;
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
 }
 
 .optionIcon {
@@ -58,40 +59,39 @@
 .optionLabel {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--text-primary);
 }
 
 .optionDesc {
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
 }
 
 .back {
   background: none;
   border: none;
-  color: #818cf8;
+  color: var(--accent-text);
   cursor: pointer;
   font-size: 0.9rem;
   margin-bottom: 1.5rem;
   align-self: flex-start;
   padding: 0;
+  transition: color 0.15s;
 }
-
-.back:hover {
-  text-decoration: underline;
-}
+.back:hover { text-decoration: underline; color: #a5b4fc; }
 
 .formCard {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   padding: 2rem;
   width: 100%;
   max-width: 420px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
 }
 
 .formCard h2 {
-  color: #f8fafc;
+  color: var(--text-primary);
   margin-bottom: 1.5rem;
   font-size: 1.25rem;
 }
@@ -116,31 +116,32 @@
 
 .field input,
 .field select {
-  padding: 0.65rem 0.9rem;
+  padding: 0.7rem 0.9rem;
   border-radius: 8px;
   border: 1px solid #475569;
-  background: #0f172a;
-  color: #f8fafc;
+  background: var(--bg-inset);
+  color: var(--text-primary);
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .field input:focus,
 .field select:focus {
-  border-color: #6366f1;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .field select option {
-  background: #1e293b;
+  background: var(--bg-card);
 }
 
 .error {
-  color: #f87171;
+  color: var(--error);
   font-size: 0.875rem;
   background: #450a0a;
   border: 1px solid #7f1d1d;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   padding: 0.5rem 0.75rem;
 }
 
@@ -148,19 +149,35 @@
   padding: 0.75rem;
   border-radius: 8px;
   border: none;
-  background: #6366f1;
+  background: var(--accent);
   color: #fff;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, box-shadow 0.15s;
 }
 
 .button:hover:not(:disabled) {
-  background: #4f46e5;
+  background: var(--accent-hover);
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.25);
 }
 
 .button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .formCard {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .optionBtn {
+    min-width: 100%;
+    padding: 1.25rem 1rem;
+  }
 }

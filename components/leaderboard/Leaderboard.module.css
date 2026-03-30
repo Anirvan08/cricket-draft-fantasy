@@ -1,11 +1,12 @@
 .container {
   min-height: 100vh;
-  background: #0f172a;
-  padding: 2rem 1rem;
-  max-width: 680px;
+  background: var(--bg-base);
+  padding: 1.5rem 1.5rem 2rem;
+  max-width: 900px;
   margin: 0 auto;
 }
 
+/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -14,40 +15,51 @@
   gap: 1rem;
 }
 
-.backLink {
-  font-size: 0.85rem;
-  color: #818cf8;
-  text-decoration: none;
-}
-.backLink:hover { text-decoration: underline; }
-
 .title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #f8fafc;
-  margin: 0.25rem 0 0.2rem;
+  color: var(--text-primary);
+  margin: 0 0 0.2rem;
 }
 
 .leagueName {
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--text-muted);
   margin: 0;
 }
 
-.squadLink {
-  font-size: 0.85rem;
-  color: #818cf8;
-  text-decoration: none;
-  padding-top: 2rem;
+.lastMatchBadge {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  flex-shrink: 0;
 }
-.squadLink:hover { text-decoration: underline; }
+
+.lastMatchLabel {
+  font-size: 0.6rem;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.lastMatchTeams {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
 
 /* Tabs */
 .tabs {
   display: flex;
   gap: 0.25rem;
   margin-bottom: 1.25rem;
-  border-bottom: 1px solid #1e293b;
+  border-bottom: 1px solid var(--bg-card);
   padding-bottom: 0;
 }
 
@@ -55,7 +67,7 @@
   padding: 0.5rem 1rem;
   border: none;
   background: transparent;
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -66,34 +78,75 @@
   align-items: center;
   gap: 0.4rem;
 }
-
-.tab:hover { color: #f8fafc; }
-.tabActive { color: #818cf8; border-bottom-color: #818cf8; }
+.tab:hover { color: var(--text-primary); }
+.tabActive { color: var(--accent-text); border-bottom-color: var(--accent-text); }
 
 .tabCount {
-  background: #1e293b;
+  background: var(--bg-card);
   border-radius: 999px;
   padding: 0.05rem 0.4rem;
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 /* Standings */
 .standings {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
+/* Column label row */
+.columnLabels {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem 0.35rem;
+  gap: 0.75rem;
+}
+
+.colSpacer { flex: 1; }
+
+.colLabel {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: right;
+}
+
+.colLabelLast { width: 3rem; }
+.colLabelTotal { width: 4rem; }
+.colLabelChevron { width: 1rem; }
+
+/* Member rows */
 .memberRow {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   overflow: hidden;
+  transition: border-color 0.15s;
 }
 
 .youRow {
-  border-color: #4f46e5;
+  border-color: var(--accent-hover);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+/* Top 3 special styles */
+.rank1 {
+  border-color: rgba(234, 179, 8, 0.3);
+  background: rgba(234, 179, 8, 0.04);
+}
+
+.rank2 {
+  border-color: rgba(148, 163, 184, 0.3);
+  background: rgba(148, 163, 184, 0.03);
+}
+
+.rank3 {
+  border-color: rgba(180, 83, 9, 0.25);
+  background: rgba(180, 83, 9, 0.03);
 }
 
 .memberMain {
@@ -101,126 +154,169 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.85rem 1rem;
+  padding: 0.75rem 1rem;
   background: transparent;
   border: none;
   cursor: pointer;
   text-align: left;
   transition: background 0.1s;
+  color: inherit;
+  font: inherit;
 }
-.memberMain:hover { background: #263347; }
+.memberMain:hover { background: var(--bg-hover); }
 
 .rank {
-  width: 2rem;
+  width: 1.75rem;
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   flex-shrink: 0;
 }
 
 .rankNum {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  color: #475569;
+  color: var(--text-faint);
 }
 
 .memberName {
   flex: 1;
-  color: #f8fafc;
+  color: var(--text-primary);
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.925rem;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .youTag {
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   background: #1d4ed8;
   color: #bfdbfe;
   border-radius: 4px;
-  padding: 0.1rem 0.35rem;
-  font-weight: 600;
+  padding: 0.1rem 0.3rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.lastPts {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-faint);
+  width: 3rem;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 .totalPts {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  color: #818cf8;
+  color: var(--accent-text);
+  width: 4rem;
+  text-align: right;
   flex-shrink: 0;
+}
+
+/* Top 1 special total */
+.rank1 .totalPts {
+  color: #facc15;
 }
 
 .chevron {
-  color: #475569;
-  font-size: 0.85rem;
+  color: var(--text-faint);
+  font-size: 0.8rem;
   transition: transform 0.2s;
   flex-shrink: 0;
+  width: 1rem;
+  text-align: center;
 }
 .chevronOpen { transform: rotate(180deg); }
 
+/* Divider after top 3 */
+.podiumDivider {
+  height: 0;
+  border: none;
+  border-top: 1px dashed rgba(99, 102, 241, 0.15);
+  margin: 0.25rem 0;
+}
+
 /* Player breakdown inside standings */
 .playerBreakdown {
-  border-top: 1px solid #334155;
-  padding: 0.5rem 0;
+  border-top: 1px solid var(--border);
+  padding: 0.4rem 0;
 }
 
 .breakdownRow {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.4rem 1rem 0.4rem 3.75rem;
+  padding: 0.35rem 1rem 0.35rem 3.5rem;
 }
 
 .breakdownName {
   flex: 1;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   color: #cbd5e1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .breakdownTeam {
-  font-size: 0.75rem;
-  color: #64748b;
+  font-size: 0.7rem;
+  color: var(--text-muted);
   min-width: 2.5rem;
 }
 
 .breakdownPts {
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #94a3b8;
-  min-width: 3.5rem;
+  color: var(--text-secondary);
+  min-width: 3rem;
   text-align: right;
 }
 
+.negPts {
+  color: var(--error);
+}
+
 .noData {
-  padding: 0.75rem 1rem 0.75rem 3.75rem;
+  padding: 0.75rem 1rem 0.75rem 3.5rem;
   font-size: 0.85rem;
-  color: #475569;
+  color: var(--text-faint);
   font-style: italic;
 }
 
 /* Role tags */
 .roleTag {
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   font-weight: 700;
-  padding: 0.15rem 0.4rem;
-  border-radius: 4px;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
   flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 .role_BAT  { background: #1d4ed8; color: #bfdbfe; }
 .role_BOWL { background: #15803d; color: #bbf7d0; }
 .role_AR   { background: #7e22ce; color: #e9d5ff; }
 .role_WK   { background: #b45309; color: #fde68a; }
 
-/* Match history */
+/* ========= Match history ========= */
 .matchList {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
 .matchCard {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
@@ -236,8 +332,10 @@
   text-align: left;
   transition: background 0.1s;
   gap: 1rem;
+  color: inherit;
+  font: inherit;
 }
-.matchHeader:hover { background: #263347; }
+.matchHeader:hover { background: var(--bg-hover); }
 
 .matchTitle {
   display: flex;
@@ -248,12 +346,12 @@
 .matchTeams {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--text-primary);
 }
 
 .matchDate {
   font-size: 0.78rem;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .matchRight {
@@ -264,7 +362,7 @@
 }
 
 .processedBadge {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 600;
   color: #4ade80;
   background: #14532d;
@@ -273,7 +371,7 @@
 }
 
 .pendingBadge {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 600;
   color: #f59e0b;
   background: #451a03;
@@ -283,60 +381,150 @@
 
 /* Match breakdown */
 .matchBreakdown {
-  border-top: 1px solid #334155;
-  padding: 0.5rem 0;
+  border-top: 1px solid var(--border);
+  padding: 0.4rem 0;
 }
 
 .matchMemberList {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.1rem;
 }
 
 .matchMemberRow {
   padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.topScorer {
+  background: rgba(234, 179, 8, 0.06);
+}
+
+.matchMemberHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.matchMemberRank {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-faint);
+  width: 1.25rem;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 .matchMemberName {
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #cbd5e1;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
+  flex: 1;
+}
+
+.crownTag {
+  font-size: 0.5rem;
+  font-weight: 700;
+  background: #854d0e;
+  color: #fde68a;
+  border-radius: 3px;
+  padding: 0.08rem 0.25rem;
+  letter-spacing: 0.04em;
 }
 
 .matchMemberPts {
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  color: #818cf8;
-  margin-left: 0.75rem;
+  color: var(--accent-text);
+  flex-shrink: 0;
 }
 
 .matchPlayerList {
-  margin-top: 0.35rem;
+  margin-top: 0.3rem;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.1rem;
 }
 
 .matchPlayerRow {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding-left: 0.75rem;
+  padding-left: 1.75rem;
 }
 
 .pendingNote {
   font-size: 0.8rem;
-  color: #475569;
+  color: var(--text-faint);
   font-style: italic;
   padding: 0.5rem 1rem;
 }
 
 .emptyHint {
   text-align: center;
-  color: #475569;
+  color: var(--text-faint);
   font-size: 0.9rem;
   padding: 3rem 0;
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .breakdownRow {
+    padding: 0.4rem 1.25rem 0.4rem 4.5rem;
+  }
+
+  .matchMemberRow {
+    padding: 0.6rem 1.25rem;
+  }
+
+  .matchPlayerRow {
+    padding-left: 2.25rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem 0.75rem 5rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .lastMatchBadge {
+    align-items: flex-start;
+    align-self: flex-start;
+  }
+
+  .breakdownRow {
+    padding-left: 2.5rem;
+  }
+
+  .noData {
+    padding-left: 2.5rem;
+  }
+
+  .memberMain {
+    padding: 0.65rem 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .lastPts {
+    width: 2.5rem;
+    font-size: 0.75rem;
+  }
+
+  .totalPts {
+    font-size: 0.85rem;
+    width: 3.25rem;
+  }
 }

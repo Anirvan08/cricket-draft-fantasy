@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase-server'
 import { getLeagueById } from '@/lib/db/leagues'
 import { getMembersByLeague } from '@/lib/db/league_members'
 import { getPicksByLeague } from '@/lib/db/draft_picks'
+import { getPointsByMember } from '@/lib/db/player_match_points'
+import NavBar from '@/components/nav/NavBar'
 import MySquad from '@/components/squad/MySquad'
 
 export default async function SquadPage({ params }) {
@@ -25,11 +27,27 @@ export default async function SquadPage({ params }) {
 
   const myPicks = (picks ?? []).filter(p => p.league_member_id === currentMember.id)
 
+  // Fetch points for this member's players
+  const { data: memberPoints } = await getPointsByMember(supabase, currentMember.id)
+
+  // Aggregate total points per player
+  const playerPoints = {}
+  ;(memberPoints ?? []).forEach(p => {
+    playerPoints[p.player_id] = (playerPoints[p.player_id] ?? 0) + p.fantasy_points
+  })
+
+  const totalPoints = Object.values(playerPoints).reduce((sum, v) => sum + v, 0)
+
   return (
-    <MySquad
-      league={league}
-      member={currentMember}
-      picks={myPicks}
-    />
+    <>
+      <NavBar leagueId={leagueId} isAdmin={currentMember.is_admin} />
+      <MySquad
+        league={league}
+        member={currentMember}
+        picks={myPicks}
+        playerPoints={playerPoints}
+        totalPoints={totalPoints}
+      />
+    </>
   )
 }

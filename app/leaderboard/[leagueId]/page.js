@@ -4,6 +4,7 @@ import { getLeagueById } from '@/lib/db/leagues'
 import { getMembersByLeague } from '@/lib/db/league_members'
 import { getMatchesByLeague } from '@/lib/db/matches'
 import { getPointsByLeague } from '@/lib/db/player_match_points'
+import NavBar from '@/components/nav/NavBar'
 import Leaderboard from '@/components/leaderboard/Leaderboard'
 
 export default async function LeaderboardPage({ params }) {
@@ -22,16 +23,19 @@ export default async function LeaderboardPage({ params }) {
 
   if (!league) redirect('/lobby')
 
-  const isMember = members?.some(m => m.user_id === user.id)
-  if (!isMember) redirect('/lobby')
+  const currentMember = members?.find(m => m.user_id === user.id)
+  if (!currentMember) redirect('/lobby')
 
   return (
-    <Leaderboard
-      league={league}
-      members={members ?? []}
-      matches={matches ?? []}
-      points={points ?? []}
-      currentUserId={user.id}
-    />
+    <>
+      <NavBar leagueId={leagueId} isAdmin={currentMember.is_admin} />
+      <Leaderboard
+        league={league}
+        members={members ?? []}
+        matches={matches ?? []}
+        points={points ?? []}
+        currentUserId={user.id}
+      />
+    </>
   )
 }

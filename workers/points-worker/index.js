@@ -116,7 +116,7 @@ async function syncIplMatches(env, say) {
   }
 
   // Upsert on (league_id, api_match_id) — safe to run repeatedly
-  const res = await fetch(`${env.SUPABASE_URL}/rest/v1/matches`, {
+  const res = await fetch(`${env.SUPABASE_URL}/rest/v1/matches?on_conflict=league_id,api_match_id`, {
     method: 'POST',
     headers: {
       'apikey':        env.SUPABASE_SERVICE_ROLE_KEY,

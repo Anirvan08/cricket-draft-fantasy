@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { getLeaguesByUser } from '@/lib/db/leagues'
 import { getMembersByLeague } from '@/lib/db/league_members'
@@ -18,10 +19,13 @@ export default async function LobbyPage() {
     return <NoLeague canCreate={appAdmin} />
   }
 
-  // For now, show the most recently joined league
-  // (multi-league selector can be added later)
   const membership = memberships[memberships.length - 1]
   const league = membership.league
+
+  // If draft is done, go straight to leaderboard
+  if (league.draft_status === 'completed') {
+    redirect(`/leaderboard/${league.id}`)
+  }
 
   const { data: members } = await getMembersByLeague(supabase, league.id)
 

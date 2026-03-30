@@ -1,14 +1,13 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import Link from 'next/link'
 import styles from './Leaderboard.module.css'
 
 const ROLE_LABEL = { BAT: 'Bat', BOWL: 'Bowl', AR: 'All-R', WK: 'WK' }
 const MEDALS = ['🥇', '🥈', '🥉']
 
 export default function Leaderboard({ league, members, matches, points, currentUserId }) {
-  const [tab, setTab] = useState('standings') // 'standings' | 'matches'
+  const [tab, setTab] = useState('standings')
   const [expandedMatch, setExpandedMatch] = useState(null)
   const [expandedMember, setExpandedMember] = useState(null)
 
@@ -29,9 +28,16 @@ export default function Leaderboard({ league, members, matches, points, currentU
     return [...members].sort((a, b) => memberTotals[b.id] - memberTotals[a.id])
   }, [members, memberTotals])
 
+  // Last processed match
+  const lastMatch = useMemo(() => {
+    const processed = matches.filter(m => m.points_processed)
+    if (processed.length === 0) return null
+    return processed.sort((a, b) => new Date(b.match_date) - new Date(a.match_date))[0]
+  }, [matches])
+
   // Points per match per member
   const matchPoints = useMemo(() => {
-    const map = {} // matchId → { memberId → total }
+    const map = {}
     points.forEach(p => {
       if (!map[p.match_id]) map[p.match_id] = {}
       map[p.match_id][p.league_member_id] = (map[p.match_id][p.league_member_id] ?? 0) + p.fantasy_points
@@ -39,9 +45,28 @@ export default function Leaderboard({ league, members, matches, points, currentU
     return map
   }, [points])
 
+  // Last match points per member (for the "last match" column)
+  const lastMatchPts = useMemo(() => {
+    if (!lastMatch) return {}
+    return matchPoints[lastMatch.id] ?? {}
+  }, [lastMatch, matchPoints])
+
+  // Per-match top scorer member id
+  const matchTopScorer = useMemo(() => {
+    const top = {}
+    for (const [matchId, perMember] of Object.entries(matchPoints)) {
+      let bestId = null, bestPts = -Infinity
+      for (const [memberId, pts] of Object.entries(perMember)) {
+        if (pts > bestPts) { bestPts = pts; bestId = memberId }
+      }
+      top[matchId] = bestId
+    }
+    return top
+  }, [matchPoints])
+
   // Points per match per member per player (for breakdown)
   const matchPlayerPoints = useMemo(() => {
-    const map = {} // matchId → { memberId → [point rows] }
+    const map = {}
     points.forEach(p => {
       if (!map[p.match_id]) map[p.match_id] = {}
       if (!map[p.match_id][p.league_member_id]) map[p.match_id][p.league_member_id] = []
@@ -52,16 +77,21 @@ export default function Leaderboard({ league, members, matches, points, currentU
 
   const hasMatches = matches.length > 0
   const hasPoints = points.length > 0
+  const leaderPts = ranked.length > 0 ? memberTotals[ranked[0].id] : 0
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <div>
-          <Link href="/lobby" className={styles.backLink}>← Back to lobby</Link>
           <h1 className={styles.title}>Leaderboard</h1>
           <p className={styles.leagueName}>{league.name}</p>
         </div>
-        <Link href={`/squad/${league.id}`} className={styles.squadLink}>My squad →</Link>
+        {lastMatch && (
+          <div className={styles.lastMatchBadge}>
+            <span className={styles.lastMatchLabel}>Last match</span>
+            <span className={styles.lastMatchTeams}>{lastMatch.team_a} vs {lastMatch.team_b}</span>
+          </div>
+        )}
       </div>
 
       <div className={styles.tabs}>
@@ -81,12 +111,24 @@ export default function Leaderboard({ league, members, matches, points, currentU
 
       {tab === 'standings' && (
         <div className={styles.standings}>
+          {/* Column labels */}
+          {hasPoints && (
+            <div className={styles.columnLabels}>
+              <span className={styles.colSpacer}></span>
+              {lastMatch && <span className={`${styles.colLabel} ${styles.colLabelLast}`}>Last</span>}
+              <span className={`${styles.colLabel} ${styles.colLabelTotal}`}>Total</span>
+              <span className={styles.colLabelChevron}></span>
+            </div>
+          )}
+
           {ranked.map((member, i) => {
             const total = memberTotals[member.id]
             const isYou = member.user_id === currentUserId
             const isExpanded = expandedMember === member.id
+            const lastPts = lastMatchPts[member.id] ?? 0
+            const rankClass = i === 0 ? styles.rank1 : i === 1 ? styles.rank2 : i === 2 ? styles.rank3 : ''
 
-            // Player breakdown for this member across all matches
+            // Player breakdown
             const memberPoints = points.filter(p => p.league_member_id === member.id)
             const byPlayer = memberPoints.reduce((acc, p) => {
               const key = p.player_id
@@ -97,7 +139,9 @@ export default function Leaderboard({ league, members, matches, points, currentU
             const playerBreakdown = Object.values(byPlayer).sort((a, b) => b.total - a.total)
 
             return (
-              <div key={member.id} className={`${styles.memberRow} ${isYou ? styles.youRow : ''}`}>
+              <div key={member.id}>
+              {i === 3 && hasPoints && <hr className={styles.podiumDivider} />}
+              <div className={`${styles.memberRow} ${isYou ? styles.youRow : rankClass}`}>
                 <button
                   className={styles.memberMain}
                   onClick={() => setExpandedMember(isExpanded ? null : member.id)}
@@ -109,7 +153,10 @@ export default function Leaderboard({ league, members, matches, points, currentU
                     {member.user?.display_name ?? 'Unknown'}
                     {isYou && <span className={styles.youTag}>you</span>}
                   </span>
-                  <span className={styles.totalPts}>{total.toFixed(1)} pts</span>
+                  {lastMatch && hasPoints && (
+                    <span className={styles.lastPts}>{lastPts.toFixed(1)}</span>
+                  )}
+                  <span className={styles.totalPts}>{total.toFixed(1)}</span>
                   <span className={`${styles.chevron} ${isExpanded ? styles.chevronOpen : ''}`}>▾</span>
                 </button>
 
@@ -125,12 +172,13 @@ export default function Leaderboard({ league, members, matches, points, currentU
                             {ROLE_LABEL[player.role]}
                           </span>
                           <span className={styles.breakdownTeam}>{player.ipl_team}</span>
-                          <span className={styles.breakdownPts}>{pts.toFixed(1)}</span>
+                          <span className={`${styles.breakdownPts} ${pts < 0 ? styles.negPts : ''}`}>{pts.toFixed(1)}</span>
                         </div>
                       ))
                     )}
                   </div>
                 )}
+              </div>
               </div>
             )
           })}
@@ -148,9 +196,12 @@ export default function Leaderboard({ league, members, matches, points, currentU
           {!hasMatches && (
             <p className={styles.emptyHint}>No matches scheduled yet.</p>
           )}
-          {matches.map(match => {
+          {[...matches]
+            .sort((a, b) => new Date(b.match_date) - new Date(a.match_date))
+            .map(match => {
             const isExpanded = expandedMatch === match.id
             const perMember = matchPoints[match.id] ?? {}
+            const topMemberId = matchTopScorer[match.id]
 
             return (
               <div key={match.id} className={styles.matchCard}>
@@ -175,20 +226,24 @@ export default function Leaderboard({ league, members, matches, points, currentU
 
                 {isExpanded && (
                   <div className={styles.matchBreakdown}>
-                    {/* Per-member summary for this match */}
                     <div className={styles.matchMemberList}>
                       {[...members]
                         .sort((a, b) => (perMember[b.id] ?? 0) - (perMember[a.id] ?? 0))
-                        .map(m => {
+                        .map((m, idx) => {
                           const pts = perMember[m.id] ?? 0
                           const playerRows = matchPlayerPoints[match.id]?.[m.id] ?? []
+                          const isTop = m.id === topMemberId && match.points_processed
                           return (
-                            <div key={m.id} className={styles.matchMemberRow}>
-                              <span className={styles.matchMemberName}>
-                                {m.user?.display_name ?? 'Unknown'}
-                                {m.user_id === currentUserId && <span className={styles.youTag}>you</span>}
-                              </span>
-                              <span className={styles.matchMemberPts}>{pts.toFixed(1)} pts</span>
+                            <div key={m.id} className={`${styles.matchMemberRow} ${isTop ? styles.topScorer : ''}`}>
+                              <div className={styles.matchMemberHeader}>
+                                <span className={styles.matchMemberRank}>{idx + 1}</span>
+                                <span className={styles.matchMemberName}>
+                                  {m.user?.display_name ?? 'Unknown'}
+                                  {m.user_id === currentUserId && <span className={styles.youTag}>you</span>}
+                                  {isTop && <span className={styles.crownTag}>Best</span>}
+                                </span>
+                                <span className={styles.matchMemberPts}>{pts.toFixed(1)}</span>
+                              </div>
                               {playerRows.length > 0 && (
                                 <div className={styles.matchPlayerList}>
                                   {[...playerRows]
@@ -199,7 +254,9 @@ export default function Leaderboard({ league, members, matches, points, currentU
                                         <span className={`${styles.roleTag} ${styles[`role_${row.player.role}`]}`}>
                                           {ROLE_LABEL[row.player.role]}
                                         </span>
-                                        <span className={styles.breakdownPts}>{row.fantasy_points.toFixed(1)}</span>
+                                        <span className={`${styles.breakdownPts} ${row.fantasy_points < 0 ? styles.negPts : ''}`}>
+                                          {row.fantasy_points.toFixed(1)}
+                                        </span>
                                       </div>
                                     ))}
                                 </div>

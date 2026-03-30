@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase-server'
 import { getMembersByLeague } from '@/lib/db/league_members'
 import { getPicksByLeague } from '@/lib/db/draft_picks'
 import { getAllPlayers } from '@/lib/db/players'
+import NavBar from '@/components/nav/NavBar'
 import AdminPanel from '@/components/admin/AdminPanel'
 
 export default async function AdminPage({ params }) {
@@ -23,17 +24,19 @@ export default async function AdminPage({ params }) {
   const league = leagueRes.data
   const members = membersRes.data ?? []
 
-  // Only admins can access this page
   const currentMember = members.find(m => m.user_id === user.id)
   if (!currentMember?.is_admin) redirect('/lobby')
 
   return (
-    <AdminPanel
-      league={league}
-      members={members}
-      initialPicks={picksRes.data ?? []}
-      allPlayers={playersRes.data ?? []}
-      currentUserId={user.id}
-    />
+    <>
+      <NavBar leagueId={leagueId} isAdmin={true} />
+      <AdminPanel
+        league={league}
+        members={members}
+        initialPicks={picksRes.data ?? []}
+        allPlayers={playersRes.data ?? []}
+        currentUserId={user.id}
+      />
+    </>
   )
 }

@@ -4,28 +4,29 @@
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: #0f172a;
+  background: var(--bg-base);
 }
 
 .card {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
-  padding: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
 }
 
 .title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--text-primary);
   text-align: center;
   margin-bottom: 0.25rem;
 }
 
 .subtitle {
-  color: #94a3b8;
+  color: var(--text-secondary);
   text-align: center;
   margin-bottom: 2rem;
   font-size: 0.95rem;
@@ -50,30 +51,31 @@
 }
 
 .field input {
-  padding: 0.65rem 0.9rem;
+  padding: 0.7rem 0.9rem;
   border-radius: 8px;
   border: 1px solid #475569;
-  background: #0f172a;
-  color: #f8fafc;
+  background: var(--bg-inset);
+  color: var(--text-primary);
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .field input:focus {
-  border-color: #6366f1;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
 .field input::placeholder {
-  color: #475569;
+  color: var(--text-faint);
 }
 
 .error {
-  color: #f87171;
+  color: var(--error);
   font-size: 0.875rem;
   background: #450a0a;
   border: 1px solid #7f1d1d;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   padding: 0.5rem 0.75rem;
 }
 
@@ -81,17 +83,18 @@
   padding: 0.75rem;
   border-radius: 8px;
   border: none;
-  background: #6366f1;
+  background: var(--accent);
   color: #fff;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, box-shadow 0.15s;
   margin-top: 0.25rem;
 }
 
 .button:hover:not(:disabled) {
-  background: #4f46e5;
+  background: var(--accent-hover);
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.25);
 }
 
 .button:disabled {
@@ -103,14 +106,22 @@
   margin-top: 1.5rem;
   text-align: center;
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
 }
 
 .footer a {
-  color: #818cf8;
+  color: var(--accent-text);
   font-weight: 500;
 }
+.footer a:hover { text-decoration: underline; }
 
-.footer a:hover {
-  text-decoration: underline;
+@media (max-width: 480px) {
+  .card {
+    padding: 2rem 1.25rem;
+    border-radius: var(--radius-md);
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
 }

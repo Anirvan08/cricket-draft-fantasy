@@ -1,32 +1,9 @@
 .container {
   min-height: 100vh;
-  background: #0f172a;
-  padding: 2rem 1rem;
-  max-width: 600px;
+  background: var(--bg-base);
+  padding: 1.5rem 1.5rem 2rem;
+  max-width: 800px;
   margin: 0 auto;
-}
-
-.backLink {
-  font-size: 0.85rem;
-  color: #818cf8;
-  text-decoration: none;
-}
-
-.backLink:hover { text-decoration: underline; }
-
-.leaderboardLink {
-  font-size: 0.85rem;
-  color: #818cf8;
-  text-decoration: none;
-  display: block;
-  margin-bottom: 0.4rem;
-}
-.leaderboardLink:hover { text-decoration: underline; }
-
-.headerRight {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
 }
 
 .header {
@@ -40,55 +17,84 @@
 .title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #f8fafc;
-  margin: 0.25rem 0 0.2rem;
+  color: var(--text-primary);
+  margin: 0 0 0.2rem;
 }
 
 .leagueName {
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--text-muted);
   margin: 0;
+}
+
+.statsRow {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.totalBadge {
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 1rem;
+}
+
+.totalNum {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-text);
+}
+
+.totalLabel {
+  font-size: 0.8rem;
+  color: var(--accent-text);
+  font-weight: 500;
 }
 
 .countBadge {
   display: flex;
   align-items: baseline;
   gap: 0.15rem;
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   padding: 0.6rem 1rem;
-  flex-shrink: 0;
 }
 
 .countNum {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #818cf8;
+  color: var(--accent-text);
 }
 
 .countDen {
   font-size: 1rem;
-  color: #475569;
+  color: var(--text-faint);
   font-weight: 600;
 }
 
 .countLabel {
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--text-muted);
   margin-left: 0.3rem;
 }
 
 .draftingBanner {
-  background: #1e293b;
-  border: 1px solid #f59e0b;
-  color: #f59e0b;
+  background: var(--bg-card);
+  border: 1px solid var(--warning);
+  color: var(--warning);
   border-radius: 8px;
   padding: 0.6rem 1rem;
   font-size: 0.875rem;
   margin-bottom: 1.5rem;
 }
 
+/* Role sections */
 .section {
   margin-bottom: 1.25rem;
 }
@@ -108,7 +114,6 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-
 .role_BAT  { background: #1d4ed8; color: #bfdbfe; }
 .role_BOWL { background: #15803d; color: #bbf7d0; }
 .role_AR   { background: #7e22ce; color: #e9d5ff; }
@@ -116,12 +121,20 @@
 
 .roleCount {
   font-size: 0.8rem;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
+.rolePts {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-left: auto;
+  font-weight: 600;
+}
+
+/* Player cards */
 .playerList {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0.4rem;
 }
 
@@ -129,43 +142,122 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.65rem 1rem;
+  transition: border-color 0.15s;
+}
+
+.bestPlayer {
+  border-color: rgba(99, 102, 241, 0.4);
+  background: rgba(99, 102, 241, 0.06);
 }
 
 .playerInfo {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
+  min-width: 0;
+  flex: 1;
 }
 
 .playerName {
-  color: #f8fafc;
-  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-size: 0.925rem;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.mvpTag {
+  font-size: 0.55rem;
+  font-weight: 700;
+  background: #854d0e;
+  color: #fde68a;
+  border-radius: 3px;
+  padding: 0.1rem 0.3rem;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
 }
 
 .teamTag {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #64748b;
-  background: #0f172a;
-  border: 1px solid #334155;
+  color: var(--text-muted);
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
   border-radius: 4px;
   padding: 0.1rem 0.4rem;
+  flex-shrink: 0;
+}
+
+.playerRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.playerPts {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-text);
+}
+
+.negative {
+  color: var(--error);
 }
 
 .pickNum {
-  font-size: 0.75rem;
-  color: #475569;
+  font-size: 0.7rem;
+  color: var(--text-faint);
   font-family: monospace;
 }
 
 .empty {
-  color: #475569;
+  color: var(--text-faint);
   text-align: center;
   padding: 3rem 0;
   font-size: 0.9rem;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem 1rem 5rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .statsRow {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .totalBadge, .countBadge {
+    padding: 0.4rem 0.75rem;
+  }
+
+  .totalNum, .countNum {
+    font-size: 1.2rem;
+  }
+
+  .playerList {
+    grid-template-columns: 1fr;
+  }
+
+  .playerCard {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .playerName {
+    font-size: 0.85rem;
+  }
 }
