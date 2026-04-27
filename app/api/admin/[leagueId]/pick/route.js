@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
-import { adminAddPick, adminRemovePick } from '@/services/admin.service'
+import { adminAddPick, adminRemovePick, adminReplacePick } from '@/services/admin.service'
 
 // POST — admin adds a pick on behalf of any member
 export async function POST(request, { params }) {
@@ -24,6 +24,31 @@ export async function POST(request, { params }) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
   return NextResponse.json({ success: true }, { status: 201 })
+}
+
+// PATCH — admin replaces a player in a pick (injury / unavailable)
+export async function PATCH(request, { params }) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const { leagueId } = await params
+  const { pickId, newPlayerId, reason } = await request.json()
+
+  if (!pickId || !newPlayerId) {
+    return NextResponse.json({ error: 'pickId and newPlayerId are required' }, { status: 400 })
+  }
+
+  const { error } = await adminReplacePick(supabase, {
+    leagueId,
+    pickId,
+    newPlayerId,
+    reason,
+    requestingUserId: user.id,
+  })
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+  return NextResponse.json({ success: true })
 }
 
 // DELETE — admin removes a pick, player returns to pool

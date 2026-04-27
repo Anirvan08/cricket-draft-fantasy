@@ -38,6 +38,19 @@ export default async function SquadPage({ params }) {
 
   const totalPoints = Object.values(playerPoints).reduce((sum, v) => sum + v, 0)
 
+  // Released players: those who earned points for this member but aren't in current squad
+  const currentPlayerIds = new Set(myPicks.map(p => p.player_id))
+  const releasedPlayerMap = {}
+  ;(memberPoints ?? []).forEach(p => {
+    if (!currentPlayerIds.has(p.player_id) && p.player) {
+      if (!releasedPlayerMap[p.player_id]) {
+        releasedPlayerMap[p.player_id] = { player: p.player, total: 0 }
+      }
+      releasedPlayerMap[p.player_id].total += p.fantasy_points
+    }
+  })
+  const releasedPlayers = Object.values(releasedPlayerMap).sort((a, b) => b.total - a.total)
+
   return (
     <>
       <NavBar leagueId={leagueId} isAdmin={currentMember.is_admin} />
@@ -47,6 +60,7 @@ export default async function SquadPage({ params }) {
         picks={myPicks}
         playerPoints={playerPoints}
         totalPoints={totalPoints}
+        releasedPlayers={releasedPlayers}
       />
     </>
   )

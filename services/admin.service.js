@@ -1,6 +1,6 @@
 // Admin service — bulk entry, edit picks, backfill management
 
-import { makePick, removePick, getPicksByLeague } from '@/lib/db/draft_picks'
+import { makePick, removePick, replacePick, getPicksByLeague } from '@/lib/db/draft_picks'
 import { getMember, getMembersByLeague, updateDraftOrders } from '@/lib/db/league_members'
 
 /**
@@ -57,6 +57,25 @@ export async function adminRemovePick(supabase, { leagueId, pickId, requestingUs
   }
 
   return removePick(supabase, pickId)
+}
+
+/**
+ * Admin replaces a player in a draft pick with an undrafted player.
+ * Allowed during draft_phase OR in_season (unlike add/remove).
+ * Old player is marked unavailable. Past points stay credited to the member.
+ */
+export async function adminReplacePick(supabase, { leagueId, pickId, newPlayerId, reason, requestingUserId }) {
+  const requestor = await getMember(supabase, leagueId, requestingUserId)
+  if (!requestor.data?.is_admin) return { error: { message: 'Admin access required.' } }
+
+  if (!newPlayerId) return { error: { message: 'newPlayerId is required.' } }
+
+  // Verify pick belongs to this league
+  const { data: picks } = await getPicksByLeague(supabase, leagueId)
+  const pick = picks?.find(p => p.id === pickId)
+  if (!pick) return { error: { message: 'Pick not found in this league.' } }
+
+  return replacePick(supabase, { pickId, newPlayerId, reason })
 }
 
 /**

@@ -10,19 +10,28 @@ const ROLE_LABEL = { BAT: 'Bat', BOWL: 'Bowl', AR: 'AR', WK: 'WK' }
 
 export default function AdminPanel({ league, members, initialPicks, allPlayers, currentUserId }) {
   const router = useRouter()
-  const [tab, setTab] = useState('picks') // 'picks' | 'backfill'
+  const [tab, setTab] = useState('picks') // 'picks' | 'replacements' | 'backfill'
   const [picks, setPicks] = useState(initialPicks)
   const [selectedMemberId, setSelectedMemberId] = useState(members[0]?.id ?? '')
   const [error, setError] = useState('')
-  const [removing, setRemoving] = useState(null)  // pickId being removed
-  const [adding, setAdding] = useState(null)       // playerId being added
+  const [removing, setRemoving] = useState(null)
+  const [adding, setAdding] = useState(null)
+  const [replacingPick, setReplacingPick] = useState(null) // pick object being replaced
+  const [replaceReason, setReplaceReason] = useState('')
+  const [submittingReplace, setSubmittingReplace] = useState(null)
 
   const selectedMember = members.find(m => m.id === selectedMemberId)
   const backfillMembers = members.filter(m => m.has_pending_backfill)
 
   const pickedPlayerIds = useMemo(() => new Set(picks.map(p => p.player_id)), [picks])
-  const availablePlayers = useMemo(() => allPlayers.filter(p => !pickedPlayerIds.has(p.id)), [allPlayers, pickedPlayerIds])
-  const selectedMemberPicks = useMemo(() => picks.filter(p => p.league_member_id === selectedMemberId), [picks, selectedMemberId])
+  const availablePlayers = useMemo(
+    () => allPlayers.filter(p => !pickedPlayerIds.has(p.id) && p.is_available !== false),
+    [allPlayers, pickedPlayerIds]
+  )
+  const selectedMemberPicks = useMemo(
+    () => picks.filter(p => p.league_member_id === selectedMemberId),
+    [picks, selectedMemberId]
+  )
 
   const refreshPicks = useCallback(async () => {
     const res = await fetch(`/api/draft/${league.id}/picks`)
@@ -32,7 +41,6 @@ export default function AdminPanel({ league, members, initialPicks, allPlayers, 
     }
   }, [league.id])
 
-  // Realtime — keep picks in sync if draft is happening simultaneously
   useEffect(() => {
     const supabase = createClient()
     const sub = supabase
@@ -82,6 +90,34 @@ export default function AdminPanel({ league, members, initialPicks, allPlayers, 
     setRemoving(null)
   }
 
+  async function handleReplaceSubmit(newPlayer) {
+    if (!replacingPick) return
+    setError('')
+    setSubmittingReplace(newPlayer.id)
+
+    const res = await fetch(`/api/admin/${league.id}/pick`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        pickId: replacingPick.id,
+        newPlayerId: newPlayer.id,
+        reason: replaceReason.trim() || null,
+      }),
+    })
+    const json = await res.json()
+
+    if (!res.ok) {
+      setError(json.error)
+      setSubmittingReplace(null)
+      return
+    }
+
+    await refreshPicks()
+    setSubmittingReplace(null)
+    setReplacingPick(null)
+    setReplaceReason('')
+  }
+
   async function handleClearBackfill(memberId) {
     setError('')
     const res = await fetch(`/api/admin/${league.id}/backfill`, {
@@ -112,6 +148,9 @@ export default function AdminPanel({ league, members, initialPicks, allPlayers, 
         <button className={`${styles.tab} ${tab === 'picks' ? styles.tabActive : ''}`} onClick={() => setTab('picks')}>
           Manage Picks
         </button>
+        <button className={`${styles.tab} ${tab === 'replacements' ? styles.tabActive : ''}`} onClick={() => setTab('replacements')}>
+          Replacements
+        </button>
         <button className={`${styles.tab} ${tab === 'backfill' ? styles.tabActive : ''}`} onClick={() => setTab('backfill')}>
           Backfill
           {backfillMembers.length > 0 && <span className={styles.badge}>{backfillMembers.length}</span>}
@@ -120,7 +159,6 @@ export default function AdminPanel({ league, members, initialPicks, allPlayers, 
 
       {tab === 'picks' && (
         <div className={styles.body}>
-          {/* Participant selector */}
           <div className={styles.selectorBar}>
             <label className={styles.selectorLabel}>Managing picks for</label>
             <select
@@ -137,7 +175,6 @@ export default function AdminPanel({ league, members, initialPicks, allPlayers, 
           </div>
 
           <div className={styles.columns}>
-            {/* Left: selected member's squad */}
             <div className={styles.squadCol}>
               <div className={styles.colHeader}>
                 <span>{selectedMember?.user?.display_name ?? '...'}'s squad</span>
@@ -172,7 +209,6 @@ export default function AdminPanel({ league, members, initialPicks, allPlayers, 
               </div>
             </div>
 
-            {/* Right: available player pool */}
             <div className={styles.poolCol}>
               <PlayerPool
                 players={availablePlayers}
@@ -181,6 +217,54 @@ export default function AdminPanel({ league, members, initialPicks, allPlayers, 
                 picking={adding}
               />
             </div>
+          </div>
+        </div>
+      )}
+
+      {tab === 'replacements' && (
+        <div className={styles.body}>
+          <p className={styles.replacementsHint}>
+            Replace a player who's injured, dropped from squad, or otherwise unavailable. Past points stay credited.
+          </p>
+
+          <div className={styles.selectorBar}>
+            <label className={styles.selectorLabel}>Replace a player from</label>
+            <select
+              className={styles.selector}
+              value={selectedMemberId}
+              onChange={e => setSelectedMemberId(e.target.value)}
+            >
+              {members.map(m => (
+                <option key={m.id} value={m.id}>
+                  {m.user?.display_name ?? 'Unknown'}{m.user_id === currentUserId ? ' (you)' : ''}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.replacementList}>
+            {selectedMemberPicks.length === 0 && (
+              <p className={styles.emptySquad}>No picks for this member.</p>
+            )}
+            {selectedMemberPicks.map((pick, i) => (
+              <div key={pick.id} className={styles.replacementRow}>
+                <span className={styles.pickNum}>{i + 1}</span>
+                <span className={styles.pickName}>{pick.player.name}</span>
+                <div className={styles.pickMeta}>
+                  <span className={`${styles.roleTag} ${styles[`role_${pick.player.role}`]}`}>
+                    {ROLE_LABEL[pick.player.role]}
+                  </span>
+                  <span className={styles.teamTag}>{pick.player.ipl_team}</span>
+                  {pick.replaced_from_player_id && <span className={styles.replacedTag}>swapped</span>}
+                </div>
+                <button
+                  className={styles.replaceBtn}
+                  onClick={() => { setReplacingPick(pick); setReplaceReason('') }}
+                >
+                  Replace →
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -224,6 +308,59 @@ export default function AdminPanel({ league, members, initialPicks, allPlayers, 
               })}
             </>
           )}
+        </div>
+      )}
+
+      {/* Replacement modal */}
+      {replacingPick && (
+        <div className={styles.modalOverlay} onClick={() => !submittingReplace && setReplacingPick(null)}>
+          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Replace player</h2>
+              <button
+                className={styles.modalClose}
+                onClick={() => setReplacingPick(null)}
+                disabled={!!submittingReplace}
+              >×</button>
+            </div>
+
+            <div className={styles.modalSwap}>
+              <div className={styles.swapOut}>
+                <span className={styles.swapLabel}>Out</span>
+                <span className={styles.swapName}>{replacingPick.player.name}</span>
+                <span className={`${styles.roleTag} ${styles[`role_${replacingPick.player.role}`]}`}>
+                  {ROLE_LABEL[replacingPick.player.role]}
+                </span>
+                <span className={styles.teamTag}>{replacingPick.player.ipl_team}</span>
+              </div>
+              <span className={styles.swapArrow}>→</span>
+              <div className={styles.swapIn}>
+                <span className={styles.swapLabel}>In</span>
+                <span className={styles.swapHint}>Choose below</span>
+              </div>
+            </div>
+
+            <div className={styles.modalReason}>
+              <label className={styles.reasonLabel}>Reason (optional)</label>
+              <input
+                type="text"
+                className={styles.reasonInput}
+                placeholder="e.g. Injured, Dropped from squad"
+                value={replaceReason}
+                onChange={e => setReplaceReason(e.target.value)}
+                disabled={!!submittingReplace}
+              />
+            </div>
+
+            <div className={styles.modalPool}>
+              <PlayerPool
+                players={availablePlayers}
+                onPick={handleReplaceSubmit}
+                canPick={true}
+                picking={submittingReplace}
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -5,7 +5,7 @@ import styles from './MySquad.module.css'
 const ROLE_LABEL = { BAT: 'Bat', BOWL: 'Bowl', AR: 'All-R', WK: 'WK' }
 const ROLE_ORDER = ['WK', 'BAT', 'AR', 'BOWL']
 
-export default function MySquad({ league, member, picks, playerPoints = {}, totalPoints = 0 }) {
+export default function MySquad({ league, member, picks, playerPoints = {}, totalPoints = 0, releasedPlayers = [] }) {
   const grouped = ROLE_ORDER.reduce((acc, role) => {
     acc[role] = picks.filter(p => p.player.role === role)
     return acc
@@ -98,6 +98,31 @@ export default function MySquad({ league, member, picks, playerPoints = {}, tota
           </div>
         )
       })}
+
+      {releasedPlayers.length > 0 && (
+        <div className={styles.released}>
+          <div className={styles.releasedHeader}>
+            <span className={styles.releasedLabel}>Released</span>
+            <span className={styles.releasedHint}>Players you no longer hold (points retained)</span>
+          </div>
+          <div className={styles.releasedList}>
+            {releasedPlayers.map(({ player, total }) => (
+              <div key={player.id} className={styles.releasedCard}>
+                <div className={styles.playerInfo}>
+                  <span className={styles.playerName}>{player.name}</span>
+                  <span className={`${styles.roleTag} ${styles[`role_${player.role}`]}`}>
+                    {ROLE_LABEL[player.role]}
+                  </span>
+                  <span className={styles.teamTag}>{player.ipl_team}</span>
+                </div>
+                <span className={`${styles.playerPts} ${total < 0 ? styles.negative : ''}`}>
+                  {total.toFixed(1)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {picks.length === 0 && (
         <p className={styles.empty}>No players drafted yet.</p>

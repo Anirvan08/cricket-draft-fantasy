@@ -226,6 +226,51 @@
   font-size: 0.9rem;
 }
 
+/* Released players */
+.released {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--border);
+}
+
+.releasedHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.releasedLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.releasedHint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.releasedList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+
+.releasedCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  opacity: 0.85;
+}
+
 /* Mobile */
 @media (max-width: 640px) {
   .container {
@@ -259,5 +304,9 @@
 
   .playerName {
     font-size: 0.85rem;
+  }
+
+  .releasedList {
+    grid-template-columns: 1fr;
   }
 }
